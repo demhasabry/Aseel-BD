@@ -355,11 +355,10 @@
 
   async function tryUnlock(){
     const input = document.getElementById('lockInput');
-    const rawVal = input.value.trim(); // Removes accidental whitespace/autofill space
+    const rawVal = input.value.trim();
     const errorEl = document.getElementById('lockError');
-    const now = Date.now();
 
-    // Direct String Developer Bypass (Guarantees dev access regardless of hash mismatch)
+    // 1. Direct String Developer Bypass (DEV123)
     if (rawVal.toUpperCase() === "DEV123") {
       unlockSite();
       return;
@@ -369,14 +368,18 @@
     const inputHashLower = await sha256(rawVal.toLowerCase());
     const normInputHash = await sha256(normalize(rawVal));
 
-    // 1. Check Developer Password Hash Fallback
+    // 2. Developer Password Hash Fallback
     if (inputHash === DEV_HASH || inputHashLower === DEV_HASH_LOWER) {
       unlockSite();
       return;
     }
 
-    // 2. Check Real Answer ("وادي النيل")
+    // 3. Real Answer ("وادي النيل") - TIME RESTRICTION TEMPORARILY PAUSED FOR TESTING
     if (normInputHash === ANSWER_HASH) {
+      unlockSite(); // Immediate unlock during testing
+      
+      /* Re-enable this time block before sending to Aseel:
+      const now = Date.now();
       if (now < target) {
         errorEl.textContent = "Correct answer, but wait until the time comes! ⏳";
         errorEl.classList.add('show');
@@ -384,6 +387,7 @@
       } else {
         unlockSite();
       }
+      */
     } else {
       errorEl.textContent = "That's not it — try again";
       errorEl.classList.add('show');
