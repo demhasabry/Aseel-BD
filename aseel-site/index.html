@@ -328,8 +328,9 @@
 </div>
 
 <script>
-  // SHA-256 hash for "DEV123"
-  const DEV_HASH = "809a25b1e60447164ff2f9547cb02c2f6236b28935c1f01659a721ee8dcc0875";
+  // Pre-calculated SHA-256 hashes
+  const DEV_HASH = "809a25b1e60447164ff2f9547cb02c2f6236b28935c1f01659a721ee8dcc0875"; // DEV123
+  const DEV_HASH_LOWER = "bf1a8d0113c2f0f4a08154c9e42e47262c5b367d30f30623a8d6e3f28cf69e38"; // dev123
   
   // Normalized SHA-256 hash for "وادي النيل"
   const ANSWER_HASH = "55c4784e20790bc20bf4bf22a2bb7f5a0be5e6381615d03a1d95e0e090903cb7";
@@ -354,15 +355,16 @@
 
   async function tryUnlock(){
     const input = document.getElementById('lockInput');
-    const rawVal = input.value.trim();
+    const rawVal = input.value.trim(); // Trims whitespace/autofill gaps
     const errorEl = document.getElementById('lockError');
     const now = Date.now();
 
     const inputHash = await sha256(rawVal);
+    const inputHashLower = await sha256(rawVal.toLowerCase());
     const normInputHash = await sha256(normalize(rawVal));
 
-    // 1. Check Developer Password (DEV123) -> Bypasses lock immediately
-    if (inputHash === DEV_HASH) {
+    // 1. Check Developer Password (DEV123 or dev123)
+    if (inputHash === DEV_HASH || inputHashLower === DEV_HASH_LOWER) {
       unlockSite();
       return;
     }
