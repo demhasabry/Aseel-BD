@@ -5,6 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday, Aseel</title>
 
+<!--
+  ============================================================
+  HOW TO EDIT THIS PAGE (no coding needed)
+  ============================================================
+  1. Your love note is in the section marked "A note for you".
+  2. Your memories are in the section marked "Key memories".
+  3. Your photos are in the "photos" folder next to this file —
+     keep that folder alongside index.html when you deploy.
+  4. The birthday date is set near the bottom in the <script> tag
+     (the `target` constant).
+  5. The page is locked behind a question. The question text is
+     near the top of the <body>. The answer is stored ONLY as a
+     scrambled (hashed) code, never as plain text — ask Claude to
+     generate a new hash if you want to change the answer. Do not
+     add a plaintext comparison or a bypass password anywhere in
+     this file — anyone can read the page source, so anything
+     written as plain text here is not private.
+  ============================================================
+-->
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap');
 
@@ -32,10 +52,7 @@
     position: relative;
   }
 
-  /* starfield */
-  #stars{
-    position: fixed; inset:0; z-index:0; pointer-events:none;
-  }
+  #stars{ position: fixed; inset:0; z-index:0; pointer-events:none; }
   .star{
     position:absolute; width:2px; height:2px; background:var(--cream);
     border-radius:50%; opacity:0.6;
@@ -143,9 +160,7 @@
     transform: rotate(var(--r,0deg));
     transition: transform 0.3s ease;
   }
-  .photo-slot img{
-    width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display:block;
-  }
+  .photo-slot img{ width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display:block; }
   .photo-slot:nth-child(1){ --r: -2deg; }
   .photo-slot:nth-child(2){ --r: 1.5deg; }
   .photo-slot:nth-child(3){ --r: -1deg; }
@@ -156,9 +171,7 @@
   @media (max-width: 560px){ .gallery-grid{ grid-template-columns: repeat(2, 1fr); } }
 
   .constellation{ position:relative; margin-top: 60px; padding-left: 6px; }
-  .memory{
-    position: relative; padding: 0 0 56px 40px; border-left: 1px solid rgba(169,152,201,0.35);
-  }
+  .memory{ position: relative; padding: 0 0 56px 40px; border-left: 1px solid rgba(169,152,201,0.35); }
   .memory:last-child{ border-left-color: transparent; padding-bottom: 0; }
   .memory::before{
     content:''; position:absolute; left:-5px; top:2px; width:9px; height:9px;
@@ -168,13 +181,8 @@
     font-family:'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em;
     text-transform: uppercase; color: var(--rose); margin-bottom: 6px;
   }
-  .memory h3{
-    font-family:'Fraunces', serif; font-weight:500; font-size:1.3rem; margin: 0 0 8px 0;
-    color: var(--cream);
-  }
-  .memory p{
-    margin:0; color: var(--lavender); font-size: 0.95rem; line-height:1.6; font-weight:300;
-  }
+  .memory h3{ font-family:'Fraunces', serif; font-weight:500; font-size:1.3rem; margin: 0 0 8px 0; color: var(--cream); }
+  .memory p{ margin:0; color: var(--lavender); font-size: 0.95rem; line-height:1.6; font-weight:300; }
 
   footer{
     text-align:center; padding: 60px 24px 80px; position:relative; z-index:1;
@@ -218,9 +226,7 @@
   .lock-card .error.show{ opacity:1; }
   .lock-card.shake{ animation: shake 0.4s ease; }
 
-  .lock-countdown{
-    display:flex; gap: 14px; margin-top: 34px; justify-content:center; flex-wrap: wrap;
-  }
+  .lock-countdown{ display:flex; gap: 14px; margin-top: 34px; justify-content:center; flex-wrap: wrap; }
   .lcbox{ display:flex; flex-direction:column; align-items:center; gap:6px; min-width: 54px; }
   .lcnum{
     font-family:'Space Mono', monospace; font-weight:700;
@@ -263,7 +269,7 @@
     <h2>Where was our first meeting?</h2>
     <input type="text" id="lockInput" autocomplete="off" placeholder="Type your answer">
     <button onclick="tryUnlock()">Unlock</button>
-    <div class="error" id="lockError">That's not it — try again</div>
+    <div class="error" id="lockError"></div>
 
     <div class="lock-countdown">
       <div class="lcbox"><div class="lcnum" id="ld">00</div><div class="lclbl">Days</div></div>
@@ -328,48 +334,44 @@
 </div>
 
 <script>
-  // Correct SHA-256 hash for normalized "وادي النيل"
-  const ANSWER_HASH = "b57b9cb2ba921e3c83691bf3956f71661d49e1e8fa9f201e7e4369018e69ee80";
+  // ============================================================
+  // LOCK SCREEN — the answer is stored ONLY as a SHA-256 hash.
+  // There is no plaintext copy of the answer anywhere in this file,
+  // and no bypass password. Anyone can view this page's source, so
+  // anything written here as plain text is not actually private —
+  // do not add a plaintext comparison or backdoor password.
+  // ============================================================
+  const ANSWER_HASH = "ec3fcb813800ad4454d9476f9538567b44ba55b8ee6503896365635691f0f52b";
 
-  // Target unlock date: September 10, 2026 00:00:00
+  // Birthday / unlock date: September 10, 2026, 00:00:00
   const target = new Date(2026, 8, 10, 0, 0, 0).getTime();
 
-  // Normalize Arabic input to handle spelling variations
   function normalize(str){
     return str
       .trim()
       .toLowerCase()
-      .replace(/[\u064B-\u0652]/g, '') // Remove Tashkeel
-      .replace(/[إأآا]/g, 'ا')         // Normalize Alef
-      .replace(/ة/g, 'ه')             // Normalize Ta Marbouta
-      .replace(/ى/g, 'ي')             // Normalize Alef Maqsura / Ya
-      .replace(/\s+/g, ' ');          // Collapse spaces
+      .replace(/[\u064B-\u0652]/g, '')   // strip Arabic diacritics
+      .replace(/[إأآا]/g, 'ا')            // unify alef forms
+      .replace(/ة/g, 'ه')                 // unify ta marbuta / ha
+      .replace(/ى/g, 'ي')                 // unify alef maksura / ya
+      .replace(/\s+/g, ' ');
   }
 
-  async function sha256(str) {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  async function sha256(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
   }
 
   async function tryUnlock(){
     const input = document.getElementById('lockInput');
-    const rawVal = input.value;
     const errorEl = document.getElementById('lockError');
+    const normInput = normalize(input.value);
+    const hash = await sha256(normInput);
 
-    // Developer Bypass for testing anytime
-    if (rawVal.trim().toUpperCase() === "DEV123") {
-      unlockSite();
-      return;
-    }
-
-    const normInput = normalize(rawVal);
-    const normInputHash = await sha256(normInput);
-
-    // Strictly check for "وادي النيل"
-    if (normInput === "وادي النيل" || normInputHash === ANSWER_HASH) {
+    if(hash === ANSWER_HASH){
       const now = Date.now();
-      if (now < target) {
-        errorEl.textContent = "Correct answer, but wait until the time comes! ⏳";
+      if(now < target){
+        errorEl.textContent = "That's the right answer — but it's not time yet! ⏳";
         errorEl.classList.add('show');
         triggerShake();
       } else {
@@ -386,9 +388,8 @@
     document.getElementById('lock').classList.add('hidden');
     document.getElementById('site').classList.add('revealed');
     initStars();
-
     const audio = document.getElementById('bgMusic');
-    if(audio) audio.play().catch(err => console.log("Audio deferred:", err));
+    if(audio) audio.play().catch(function(err){ console.log('Audio deferred:', err); });
   }
 
   function triggerShake(){
@@ -399,13 +400,8 @@
   function toggleMusic(){
     const audio = document.getElementById('bgMusic');
     const btn = document.getElementById('musicToggle');
-    if (audio.paused) {
-      audio.play();
-      btn.textContent = "🎵 Pause Music";
-    } else {
-      audio.pause();
-      btn.textContent = "🎵 Play Music";
-    }
+    if(audio.paused){ audio.play(); btn.textContent = "🎵 Pause Music"; }
+    else{ audio.pause(); btn.textContent = "🎵 Play Music"; }
   }
 
   document.getElementById('lockInput').addEventListener('keydown', function(e){
@@ -434,15 +430,13 @@
     const h = Math.floor((diff/(1000*60*60))%24);
     const m = Math.floor((diff/(1000*60))%60);
     const s = Math.floor((diff/1000)%60);
-
     const pad = n => String(n).padStart(2,'0');
-    
-    ['ld','lh','lm','ls'].forEach((id, idx) => {
+
+    ['d','h','m','s'].forEach(function(id, idx){
       const el = document.getElementById(id);
       if(el) el.textContent = pad([d,h,m,s][idx]);
     });
-
-    ['d','h','m','s'].forEach((id, idx) => {
+    ['ld','lh','lm','ls'].forEach(function(id, idx){
       const el = document.getElementById(id);
       if(el) el.textContent = pad([d,h,m,s][idx]);
     });
