@@ -331,9 +331,10 @@
   // Correct SHA-256 hash for normalized "وادي النيل"
   const ANSWER_HASH = "b57b9cb2ba921e3c83691bf3956f71661d49e1e8fa9f201e7e4369018e69ee80";
 
+  // Target unlock date: September 10, 2026 00:00:00
   const target = new Date(2026, 8, 10, 0, 0, 0).getTime();
 
-  // Normalize Arabic input to handle spelling variations (Alef, Ya, spaces)
+  // Normalize Arabic input to handle spelling variations
   function normalize(str){
     return str
       .trim()
@@ -355,7 +356,7 @@
     const rawVal = input.value;
     const errorEl = document.getElementById('lockError');
 
-    // Developer Bypass for testing
+    // Developer Bypass for testing anytime
     if (rawVal.trim().toUpperCase() === "DEV123") {
       unlockSite();
       return;
@@ -364,11 +365,8 @@
     const normInput = normalize(rawVal);
     const normInputHash = await sha256(normInput);
 
-    // Strictly checks for "وادي النيل"
+    // Strictly check for "وادي النيل"
     if (normInput === "وادي النيل" || normInputHash === ANSWER_HASH) {
-      unlockSite(); // Direct unlock (paused countdown for testing)
-
-      /* Re-enable time lock before sending to Aseel:
       const now = Date.now();
       if (now < target) {
         errorEl.textContent = "Correct answer, but wait until the time comes! ⏳";
@@ -377,7 +375,6 @@
       } else {
         unlockSite();
       }
-      */
     } else {
       errorEl.textContent = "That's not it — try again";
       errorEl.classList.add('show');
