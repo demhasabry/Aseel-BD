@@ -5,24 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday, Aseel</title>
 
-<!--
-  ============================================================
-  HOW TO EDIT THIS PAGE (no coding needed)
-  ============================================================
-  1. Search for "EDIT:" comments below — each marks a spot to change.
-  2. Your love note is in the section marked "EDIT: LOVE NOTE".
-  3. Your memories are in the section marked "EDIT: MEMORIES".
-  4. Your photos are already in place (in the "photos" folder next to
-     this file — keep that folder alongside index.html when you deploy).
-     To swap or add one, replace the src="photos/____.jpg" path on any
-     <div class="photo-slot"><img src="..."></div> line.
-  5. The birthday date is set near the bottom in the <script> tag.
-  6. The page is locked behind a question. Find "LOCK SCREEN" in the
-     <script> tag to change the ANSWER, and find "A question for you"
-     near the top of the <body> to change the question text shown.
-  ============================================================
--->
-
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap');
 
@@ -268,7 +250,7 @@
   .lock-card button:hover{ opacity:0.85; }
   .lock-card .error{
     color: var(--rose); font-family:'Space Mono', monospace; font-size:0.72rem;
-    letter-spacing:0.05em; margin-top: 14px; height: 14px; opacity:0;
+    letter-spacing:0.05em; margin-top: 14px; min-height: 14px; opacity:0;
     transition: opacity 0.2s ease;
   }
   .lock-card .error.show{ opacity:1; }
@@ -295,9 +277,24 @@
 
   #site{ display:none; }
   #site.revealed{ display:block; }
+
+  /* ---------- MUSIC TOGGLE BUTTON ---------- */
+  .music-btn{
+    position: fixed; bottom: 24px; right: 24px; z-index: 100;
+    background: rgba(36, 22, 64, 0.85); border: 1px solid var(--line);
+    color: var(--gold); padding: 10px 16px; border-radius: 30px;
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+    backdrop-filter: blur(8px); display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: all 0.2s ease;
+  }
+  .music-btn:hover{ transform: scale(1.05); background: var(--night-2); }
 </style>
 </head>
 <body>
+
+<!-- Audio element for background music -->
+<audio id="bgMusic" loop src="song.mp3"></audio>
 
 <!-- ================= LOCK SCREEN ================= -->
 <div id="lock">
@@ -318,6 +315,9 @@
 </div>
 
 <div id="site">
+
+<!-- Floating Music Toggle -->
+<button class="music-btn" id="musicToggle" onclick="toggleMusic()">🎵 Pause Music</button>
 
 <div id="stars"></div>
 
@@ -342,7 +342,6 @@
 </section>
 
 <!-- ================= LOVE NOTE ================= -->
-<!-- EDIT: LOVE NOTE — replace the paragraph text below with your own words -->
 <section>
   <div class="eyebrow">A note for you</div>
   <div class="note">
@@ -362,8 +361,6 @@
 </section>
 
 <!-- ================= GALLERY ================= -->
-<!-- EDIT: PHOTOS — replace any <div class="photo-slot">...</div> with
-     <div class="photo-slot"><img src="your-photo.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:6px;"></div> -->
 <section>
   <div class="eyebrow">Our favorite moments</div>
   <h2 style="font-size: clamp(1.6rem,4vw,2.2rem);">A little gallery</h2>
@@ -378,7 +375,6 @@
 </section>
 
 <!-- ================= MEMORIES / TIMELINE ================= -->
-<!-- EDIT: MEMORIES — change the dates, titles, and descriptions below -->
 <section>
   <div class="eyebrow">Key memories</div>
   <h2 style="font-size: clamp(1.6rem,4vw,2.2rem); margin-bottom: 8px;">Our story so far</h2>
@@ -413,10 +409,13 @@
 
 <script>
   // ============================================================
-  // LOCK SCREEN — the correct answer is set here (case/spacing
-  // insensitive). Change ANSWER below if you want to update it.
+  // CONFIGURATION: ANSWER, DEV PASS, AND TARGET DATE
   // ============================================================
   const ANSWER = "وادي النيل";
+  const DEV_PASS = "DEV123"; // EDIT: Change developer password here
+
+  // Target Date: September 10, 2026 at 00:00:00
+  const target = new Date(2026, 8, 10, 0, 0, 0).getTime();
 
   function normalize(str){
     return str
@@ -432,14 +431,60 @@
   function tryUnlock(){
     const input = document.getElementById('lockInput');
     const val = normalize(input.value);
-    if(val === normalize(ANSWER)){
-      document.getElementById('lock').classList.add('hidden');
-      document.getElementById('site').classList.add('revealed');
-      initStars();
+    const errorEl = document.getElementById('lockError');
+    const now = Date.now();
+
+    // Check for Developer Bypass
+    if (input.value.trim() === DEV_PASS) {
+      unlockSite();
+      return;
+    }
+
+    // Check standard lock requirements
+    if (val === normalize(ANSWER)) {
+      if (now < target) {
+        // Correct answer, but countdown hasn't finished
+        errorEl.textContent = "Correct answer, but wait until the time comes! ⏳";
+        errorEl.classList.add('show');
+        triggerShake();
+      } else {
+        // Correct answer AND countdown finished
+        unlockSite();
+      }
     } else {
-      document.getElementById('lockError').classList.add('show');
-      const card = document.getElementById('lockCard');
-      card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+      // Incorrect answer
+      errorEl.textContent = "That's not it — try again";
+      errorEl.classList.add('show');
+      triggerShake();
+    }
+  }
+
+  function triggerShake(){
+    const card = document.getElementById('lockCard');
+    card.classList.remove('shake'); 
+    void card.offsetWidth; 
+    card.classList.add('shake');
+  }
+
+  function unlockSite(){
+    document.getElementById('lock').classList.add('hidden');
+    document.getElementById('site').classList.add('revealed');
+    initStars();
+    
+    // Play background audio upon user click
+    const audio = document.getElementById('bgMusic');
+    audio.play().catch(err => console.log("Audio playback deferred:", err));
+  }
+
+  function toggleMusic(){
+    const audio = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicToggle');
+    if (audio.paused) {
+      audio.play();
+      btn.textContent = "🎵 Pause Music";
+    } else {
+      audio.pause();
+      btn.textContent = "🎵 Play Music";
     }
   }
 
@@ -450,7 +495,7 @@
   // starfield generation
   function initStars(){
     const starsEl = document.getElementById('stars');
-    if(starsEl.childElementCount > 0) return; // avoid duplicating on repeat unlocks
+    if(starsEl.childElementCount > 0) return;
     for(let i=0;i<70;i++){
       const s = document.createElement('div');
       s.className='star';
@@ -462,12 +507,6 @@
     }
   }
 
-  // ============================================================
-  // EDIT THE BIRTHDAY DATE HERE (format: YYYY, MONTH-1, DAY, HOUR, MIN)
-  // Currently set to October 9, 2026 at 00:00
-  // ============================================================
-  const target = new Date(2026, 8, 10, 0, 0, 0).getTime();
-
   function tick(){
     const now = Date.now();
     let diff = target - now;
@@ -476,6 +515,7 @@
     const h = Math.floor((diff/(1000*60*60))%24);
     const m = Math.floor((diff/(1000*60))%60);
     const s = Math.floor((diff/1000)%60);
+    
     document.getElementById('d').textContent = String(d).padStart(2,'0');
     document.getElementById('h').textContent = String(h).padStart(2,'0');
     document.getElementById('m').textContent = String(m).padStart(2,'0');
