@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, Aseel</title>
+
+<!--
+  ============================================================
+  HOW TO EDIT THIS PAGE (no coding needed)
+  ============================================================
+  1. Search for "EDIT:" comments below — each marks a spot to change.
+  2. Your love note is in the section marked "EDIT: LOVE NOTE".
+  3. Your memories are in the section marked "EDIT: MEMORIES".
+  4. Your photos are already in place (in the "photos" folder next to
+     this file — keep that folder alongside index.html when you deploy).
+     To swap or add one, replace the src="photos/____.jpg" path on any
+     <div class="photo-slot"><img src="..."></div> line.
+  5. The birthday date is set near the bottom in the <script> tag.
+  6. The page is locked behind a question. Find "LOCK SCREEN" in the
+     <script> tag to change the ANSWER, and find "A question for you"
+     near the top of the <body> to change the question text shown.
+  ============================================================
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --night-1: #150c28;
+    --night-2: #241640;
+    --night-3: #351f5c;
+    --gold: #e8b34a;
+    --rose: #e58a9b;
+    --cream: #f5efe6;
+    --lavender: #a998c9;
+    --line: rgba(245,239,230,0.18);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: radial-gradient(ellipse at 20% -10%, var(--night-3), var(--night-1) 60%);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* starfield */
+  #stars, #stars2{
+    position: fixed; inset:0; z-index:0; pointer-events:none;
+  }
+  .star{
+    position:absolute; width:2px; height:2px; background:var(--cream);
+    border-radius:50%; opacity:0.6;
+    animation: twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity:0.15; transform:scale(1); }
+    50%{ opacity:0.9; transform:scale(1.6); }
+  }
+
+  section{ position:relative; z-index:1; padding: 110px 24px; max-width: 880px; margin:0 auto; }
+
+  h1,h2{ font-family:'Fraunces', serif; font-weight:500; margin:0; }
+
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    color: var(--rose);
+    margin-bottom: 18px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height: 100svh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding-top: 60px; padding-bottom: 40px;
+  }
+  .hero h1{
+    font-size: clamp(2.6rem, 8vw, 5.2rem);
+    line-height: 1.05;
+    background: linear-gradient(180deg, var(--cream), var(--lavender));
+    -webkit-background-clip: text; background-clip:text; color: transparent;
+  }
+  .hero .sub{
+    margin-top: 18px; font-size: 1.05rem; color: var(--lavender); font-weight:300;
+    max-width: 480px;
+  }
+
+  /* countdown */
+  .countdown{
+    display:flex; gap: clamp(10px,3vw,28px); margin-top: 56px; flex-wrap: wrap; justify-content:center;
+  }
+  .cbox{
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    min-width: 74px;
+  }
+  .cbox .num{
+    font-family:'Space Mono', monospace; font-weight:700;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    color: var(--gold);
+    text-shadow: 0 0 24px rgba(232,179,74,0.45);
+  }
+  .cbox .lbl{
+    font-family:'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--lavender);
+  }
+
+  /* lock screen countdown (smaller version) */
+  .lock-countdown{
+    display:flex; gap: clamp(8px,2.5vw,20px); margin-top: 34px; flex-wrap: wrap; justify-content:center;
+  }
+  .lcbox{
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    min-width: 52px;
+  }
+  .lcbox .lcnum{
+    font-family:'Space Mono', monospace; font-weight:700;
+    font-size: clamp(1.2rem, 4vw, 1.7rem);
+    color: var(--gold);
+    text-shadow: 0 0 18px rgba(232,179,74,0.4);
+  }
+  .lcbox .lclbl{
+    font-family:'Space Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--lavender);
+  }
+
+  /* single candle signature element */
+  .candle{ margin-top: 64px; display:flex; flex-direction:column; align-items:center; }
+  .flame{
+    width: 10px; height: 22px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: radial-gradient(circle at 50% 70%, #fff6d6, var(--gold) 55%, #c9701f 100%);
+    box-shadow: 0 0 18px 4px rgba(232,179,74,0.55);
+    animation: flicker 2.6s ease-in-out infinite;
+    transform-origin: bottom center;
+  }
+  @keyframes flicker{
+    0%,100%{ transform: rotate(-2deg) scaleY(1); }
+    25%{ transform: rotate(2deg) scaleY(1.05); }
+    50%{ transform: rotate(-1deg) scaleY(0.96); }
+    75%{ transform: rotate(3deg) scaleY(1.02); }
+  }
+  .wick{ width:3px; height:14px; background: #4a3a2a; margin-top:-2px; }
+  .candle .caption{
+    font-family:'Space Mono', monospace; font-size:0.62rem; letter-spacing:0.2em;
+    text-transform:uppercase; color: var(--lavender); margin-top: 14px;
+  }
+
+  /* ---------- LOVE NOTE ---------- */
+  .note{
+    background: linear-gradient(180deg, rgba(245,239,230,0.06), rgba(245,239,230,0.02));
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 48px clamp(24px,6vw,64px);
+    position: relative;
+  }
+  .note::before{
+    content:'"'; position:absolute; top: -6px; left: 20px;
+    font-family:'Fraunces', serif; font-size: 5rem; color: var(--rose); opacity:0.5;
+  }
+  .note p{
+    font-family:'Fraunces', serif; font-style: italic; font-weight: 500;
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem); line-height: 1.6; color: var(--cream);
+    margin: 0 0 18px 0;
+  }
+  .note .sign{
+    font-family:'Space Mono', monospace; font-size: 0.75rem; color: var(--gold);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery-grid{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px;
+  }
+  .photo-slot{
+    aspect-ratio: 4/5; border-radius: 6px;
+    border: 1.5px solid rgba(245,239,230,0.14);
+    background: rgba(245,239,230,0.03);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    color: var(--lavender); font-family:'Space Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.05em; overflow: hidden;
+    transform: rotate(var(--r,0deg));
+    transition: transform 0.3s ease;
+  }
+  .photo-slot img{
+    width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display:block;
+  }
+  .photo-slot:nth-child(1){ --r: -2deg; }
+  .photo-slot:nth-child(2){ --r: 1.5deg; }
+  .photo-slot:nth-child(3){ --r: -1deg; }
+  .photo-slot:nth-child(4){ --r: 2deg; }
+  .photo-slot:nth-child(5){ --r: -1.5deg; }
+  .photo-slot:nth-child(6){ --r: 1deg; }
+  .photo-slot:hover{ transform: rotate(0deg) scale(1.03); }
+  @media (max-width: 560px){
+    .gallery-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---------- TIMELINE (constellation) ---------- */
+  .constellation{ position:relative; margin-top: 60px; padding-left: 6px; }
+  .memory{
+    position: relative; padding: 0 0 56px 40px; border-left: 1px solid rgba(169,152,201,0.35);
+  }
+  .memory:last-child{ border-left-color: transparent; padding-bottom: 0; }
+  .memory::before{
+    content:''; position:absolute; left:-5px; top:2px; width:9px; height:9px;
+    border-radius:50%; background: var(--gold); box-shadow: 0 0 12px 2px rgba(232,179,74,0.6);
+  }
+  .memory .date{
+    font-family:'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--rose); margin-bottom: 6px;
+  }
+  .memory h3{
+    font-family:'Fraunces', serif; font-weight:500; font-size:1.3rem; margin: 0 0 8px 0;
+    color: var(--cream);
+  }
+  .memory p{
+    margin:0; color: var(--lavender); font-size: 0.95rem; line-height:1.6; font-weight:300;
+  }
+
+  footer{
+    text-align:center; padding: 60px 24px 80px; position:relative; z-index:1;
+    font-family:'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em;
+    color: rgba(169,152,201,0.5); text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .star, .flame{ animation: none; }
+  }
+
+  /* ---------- LOCK SCREEN ---------- */
+  #lock{
+    position: fixed; inset: 0; z-index: 999;
+    background: radial-gradient(ellipse at 50% 30%, var(--night-3), var(--night-1) 70%);
+    display:flex; align-items:center; justify-content:center;
+    padding: 24px;
+  }
+  #lock.hidden{ display:none; }
+  .lock-card{
+    max-width: 420px; width:100%; text-align:center;
+  }
+  .lock-card .eyebrow{ justify-content:center; display:flex; }
+  .lock-card h2{
+    font-family:'Fraunces', serif; font-weight:500;
+    font-size: clamp(1.3rem, 4vw, 1.7rem); color: var(--cream);
+    margin: 0 0 30px 0; line-height:1.4;
+  }
+  .lock-card input{
+    width: 100%; background: rgba(245,239,230,0.06);
+    border: 1px solid var(--line); border-radius: 4px;
+    padding: 14px 16px; color: var(--cream); font-family:'Inter', sans-serif;
+    font-size: 1rem; text-align:center; outline:none;
+  }
+  .lock-card input:focus{ border-color: var(--gold); }
+  .lock-card button{
+    margin-top: 16px; width:100%; padding: 14px 16px;
+    background: var(--gold); color: var(--night-1); border:none; border-radius:4px;
+    font-family:'Space Mono', monospace; font-size:0.75rem; letter-spacing:0.15em;
+    text-transform:uppercase; cursor:pointer; transition: opacity 0.2s ease;
+  }
+  .lock-card button:hover{ opacity:0.85; }
+  .lock-card .error{
+    color: var(--rose); font-family:'Space Mono', monospace; font-size:0.72rem;
+    letter-spacing:0.05em; margin-top: 14px; height: 14px; opacity:0;
+    transition: opacity 0.2s ease;
+  }
+  .lock-card .error.show{ opacity:1; }
+  .lock-card.shake{ animation: shake 0.4s ease; }
+
+  .lock-countdown{
+    display:flex; gap: 14px; margin-top: 34px; justify-content:center; flex-wrap: wrap;
+  }
+  .lcbox{ display:flex; flex-direction:column; align-items:center; gap:6px; min-width: 54px; }
+  .lcnum{
+    font-family:'Space Mono', monospace; font-weight:700;
+    font-size: 1.4rem; color: var(--gold);
+    text-shadow: 0 0 16px rgba(232,179,74,0.4);
+  }
+  .lclbl{
+    font-family:'Space Mono', monospace; font-size: 0.56rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--lavender);
+  }
+  @keyframes shake{
+    0%,100%{ transform: translateX(0); }
+    25%{ transform: translateX(-8px); }
+    75%{ transform: translateX(8px); }
+  }
+
+  #site{ display:none; }
+  #site.revealed{ display:block; }
+</style>
+</head>
+<body>
+
+<!-- ================= LOCK SCREEN ================= -->
+<div id="lock">
+  <div class="lock-card" id="lockCard">
+    <div class="eyebrow">A question for you</div>
+    <h2>Where were our first meeting?</h2>
+    <input type="text" id="lockInput" autocomplete="off" placeholder="Type your answer">
+    <button onclick="tryUnlock()">Unlock</button>
+    <div class="error" id="lockError">That's not it — try again</div>
+
+    <div class="lock-countdown" id="lockCountdown">
+      <div class="lcbox"><div class="lcnum" id="ld">00</div><div class="lclbl">Days</div></div>
+      <div class="lcbox"><div class="lcnum" id="lh">00</div><div class="lclbl">Hours</div></div>
+      <div class="lcbox"><div class="lcnum" id="lm">00</div><div class="lclbl">Mins</div></div>
+      <div class="lcbox"><div class="lcnum" id="ls">00</div><div class="lclbl">Secs</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="site">
+
+<div id="stars"></div>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="eyebrow">September 10</div>
+  <h1>Happy Birthday,<br>Aseel</h1>
+  <p class="sub">Counting every second until the world gets to celebrate you again.</p>
+
+  <div class="countdown" id="countdown">
+    <div class="cbox"><div class="num" id="d">00</div><div class="lbl">Days</div></div>
+    <div class="cbox"><div class="num" id="h">00</div><div class="lbl">Hours</div></div>
+    <div class="cbox"><div class="num" id="m">00</div><div class="lbl">Mins</div></div>
+    <div class="cbox"><div class="num" id="s">00</div><div class="lbl">Secs</div></div>
+  </div>
+
+  <div class="candle">
+    <div class="flame"></div>
+    <div class="wick"></div>
+    <div class="caption">make a wish</div>
+  </div>
+</section>
+
+<!-- ================= LOVE NOTE ================= -->
+<!-- EDIT: LOVE NOTE — replace the paragraph text below with your own words -->
+<section>
+  <div class="eyebrow">A note for you</div>
+  <div class="note">
+    <p>
+      Happy birthday, Aseel. I still think about that night I first saw you — I didn't even
+      know your name yet, but something in me already knew I wanted to. Then came the day I
+      finally talked to you, terrified and telling myself "whatever happens, happens" — and it
+      turned out to be the best risk I've ever taken. Since then, every date, every late-night
+      talk, every small moment has only made me fall harder. The day you said yes and we became
+      official, I felt like the luckiest person alive, and I still do. You have no idea how much
+      you mean to me — how you make ordinary days feel worth remembering, and how safe and loved
+      I feel just being next to you. I hope this year gives you every bit of happiness you give
+      me, and more. Happy birthday, my love. Here's to us, and to everything still ahead.
+    </p>
+    <div class="sign">— Ahmed</div>
+  </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<!-- EDIT: PHOTOS — replace any <div class="photo-slot">...</div> with
+     <div class="photo-slot"><img src="your-photo.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:6px;"></div> -->
+<section>
+  <div class="eyebrow">Our favorite moments</div>
+  <h2 style="font-size: clamp(1.6rem,4vw,2.2rem);">A little gallery</h2>
+  <div class="gallery-grid">
+    <div class="photo-slot"><img src="photos/IMG_9819.jpg" alt=""></div>
+    <div class="photo-slot"><img src="photos/IMG_5847.jpg" alt=""></div>
+    <div class="photo-slot"><img src="photos/IMG_9818.jpg" alt=""></div>
+    <div class="photo-slot"><img src="photos/IMG_7050.jpg" alt=""></div>
+    <div class="photo-slot"><img src="photos/IMG_9817.jpg" alt=""></div>
+    <div class="photo-slot"><img src="photos/IMG_8186.jpg" alt=""></div>
+  </div>
+</section>
+
+<!-- ================= MEMORIES / TIMELINE ================= -->
+<!-- EDIT: MEMORIES — change the dates, titles, and descriptions below -->
+<section>
+  <div class="eyebrow">Key memories</div>
+  <h2 style="font-size: clamp(1.6rem,4vw,2.2rem); margin-bottom: 8px;">Our story so far</h2>
+
+  <div class="constellation">
+    <div class="memory">
+      <div class="date">November 18, 2025</div>
+      <h3>The day I first saw her</h3>
+      <p>I saw her beautiful eyes, and that was the moment I decided to keep her in my mind.</p>
+    </div>
+    <div class="memory">
+      <div class="date">November 25, 2025</div>
+      <h3>The first time we talked</h3>
+      <p>I took the chance. I was a little afraid, but I told myself — whatever happens, happens.</p>
+    </div>
+    <div class="memory">
+      <div class="date">January 3, 2026</div>
+      <h3>Our first date</h3>
+      <p>A day full of love, exploring each other — the beginning of falling.</p>
+    </div>
+    <div class="memory">
+      <div class="date">April 30, 2026</div>
+      <h3>She said yes</h3>
+      <p>We couldn't hold our feelings in any longer, and everything finally came out. We officially became together.</p>
+    </div>
+  </div>
+</section>
+
+<footer>made with love, for aseel</footer>
+
+</div><!-- /#site -->
+
+<script>
+  // ============================================================
+  // LOCK SCREEN — the correct answer is set here (case/spacing
+  // insensitive). Change ANSWER below if you want to update it.
+  // ============================================================
+  const ANSWER = "وادي النيل";
+
+  function normalize(str){
+    return str
+      .trim()
+      .toLowerCase()
+      .replace(/[\u064B-\u0652]/g, '')      // strip Arabic diacritics
+      .replace(/[إأآا]/g, 'ا')               // unify alef forms
+      .replace(/ة/g, 'ه')                    // unify ta marbuta / ha
+      .replace(/ى/g, 'ي')                    // unify alef maksura / ya
+      .replace(/\s+/g, ' ');
+  }
+
+  function tryUnlock(){
+    const input = document.getElementById('lockInput');
+    const val = normalize(input.value);
+    if(val === normalize(ANSWER)){
+      document.getElementById('lock').classList.add('hidden');
+      document.getElementById('site').classList.add('revealed');
+      initStars();
+    } else {
+      document.getElementById('lockError').classList.add('show');
+      const card = document.getElementById('lockCard');
+      card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+    }
+  }
+
+  document.getElementById('lockInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') tryUnlock();
+  });
+
+  // starfield generation
+  function initStars(){
+    const starsEl = document.getElementById('stars');
+    if(starsEl.childElementCount > 0) return; // avoid duplicating on repeat unlocks
+    for(let i=0;i<70;i++){
+      const s = document.createElement('div');
+      s.className='star';
+      s.style.top = Math.random()*100+'%';
+      s.style.left = Math.random()*100+'%';
+      s.style.animationDelay = (Math.random()*4)+'s';
+      s.style.width = s.style.height = (Math.random()*2+1)+'px';
+      starsEl.appendChild(s);
+    }
+  }
+
+  // ============================================================
+  // EDIT THE BIRTHDAY DATE HERE (format: YYYY, MONTH-1, DAY, HOUR, MIN)
+  // Currently set to October 9, 2026 at 00:00
+  // ============================================================
+  const target = new Date(2026, 8, 10, 0, 0, 0).getTime();
+
+  function tick(){
+    const now = Date.now();
+    let diff = target - now;
+    if(diff < 0) diff = 0;
+    const d = Math.floor(diff/(1000*60*60*24));
+    const h = Math.floor((diff/(1000*60*60))%24);
+    const m = Math.floor((diff/(1000*60))%60);
+    const s = Math.floor((diff/1000)%60);
+    document.getElementById('d').textContent = String(d).padStart(2,'0');
+    document.getElementById('h').textContent = String(h).padStart(2,'0');
+    document.getElementById('m').textContent = String(m).padStart(2,'0');
+    document.getElementById('s').textContent = String(s).padStart(2,'0');
+
+    document.getElementById('ld').textContent = String(d).padStart(2,'0');
+    document.getElementById('lh').textContent = String(h).padStart(2,'0');
+    document.getElementById('lm').textContent = String(m).padStart(2,'0');
+    document.getElementById('ls').textContent = String(s).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+</script>
+
+</body>
+</html>
