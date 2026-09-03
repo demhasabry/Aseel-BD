@@ -328,24 +328,21 @@
 </div>
 
 <script>
-  // Correct SHA-256 hashes
-  const DEV_HASH = "e81a38a3ae4b78907f169cb4529f07149a606bc45a0b77e8a931086a0d2dc0f0"; // Exact SHA-256 for DEV123
-  const DEV_HASH_LOWER = "bf1a8d0113c2f0f4a08154c9e42e47262c5b367d30f30623a8d6e3f28cf69e38"; // dev123
-  
-  // Normalized SHA-256 hash for "وادي النيل"
-  const ANSWER_HASH = "55c4784e20790bc20bf4bf22a2bb7f5a0be5e6381615d03a1d95e0e090903cb7";
+  // Correct SHA-256 hash for normalized "وادي النيل"
+  const ANSWER_HASH = "b57b9cb2ba921e3c83691bf3956f71661d49e1e8fa9f201e7e4369018e69ee80";
 
   const target = new Date(2026, 8, 10, 0, 0, 0).getTime();
 
+  // Normalize Arabic input to handle spelling variations (Alef, Ya, spaces)
   function normalize(str){
     return str
       .trim()
       .toLowerCase()
-      .replace(/[\u064B-\u0652]/g, '')
-      .replace(/[إأآا]/g, 'ا')
-      .replace(/ة/g, 'ه')
-      .replace(/ى/g, 'ي')
-      .replace(/\s+/g, ' ');
+      .replace(/[\u064B-\u0652]/g, '') // Remove Tashkeel
+      .replace(/[إأآا]/g, 'ا')         // Normalize Alef
+      .replace(/ة/g, 'ه')             // Normalize Ta Marbouta
+      .replace(/ى/g, 'ي')             // Normalize Alef Maqsura / Ya
+      .replace(/\s+/g, ' ');          // Collapse spaces
   }
 
   async function sha256(str) {
@@ -355,30 +352,23 @@
 
   async function tryUnlock(){
     const input = document.getElementById('lockInput');
-    const rawVal = input.value.trim();
+    const rawVal = input.value;
     const errorEl = document.getElementById('lockError');
 
-    // 1. Direct String Developer Bypass (DEV123)
-    if (rawVal.toUpperCase() === "DEV123") {
+    // Developer Bypass for testing
+    if (rawVal.trim().toUpperCase() === "DEV123") {
       unlockSite();
       return;
     }
 
-    const inputHash = await sha256(rawVal);
-    const inputHashLower = await sha256(rawVal.toLowerCase());
-    const normInputHash = await sha256(normalize(rawVal));
+    const normInput = normalize(rawVal);
+    const normInputHash = await sha256(normInput);
 
-    // 2. Developer Password Hash Fallback
-    if (inputHash === DEV_HASH || inputHashLower === DEV_HASH_LOWER) {
-      unlockSite();
-      return;
-    }
+    // Strictly checks for "وادي النيل"
+    if (normInput === "وادي النيل" || normInputHash === ANSWER_HASH) {
+      unlockSite(); // Direct unlock (paused countdown for testing)
 
-    // 3. Real Answer ("وادي النيل") - TIME RESTRICTION TEMPORARILY PAUSED FOR TESTING
-    if (normInputHash === ANSWER_HASH) {
-      unlockSite(); // Immediate unlock during testing
-      
-      /* Re-enable this time block before sending to Aseel:
+      /* Re-enable time lock before sending to Aseel:
       const now = Date.now();
       if (now < target) {
         errorEl.textContent = "Correct answer, but wait until the time comes! ⏳";
