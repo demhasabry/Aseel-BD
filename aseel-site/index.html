@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday, Aseel</title>
 
-<!-- CryptoJS for AES Decryption -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap');
 
@@ -263,7 +260,7 @@
 <div id="lock">
   <div class="lock-card" id="lockCard">
     <div class="eyebrow">A question for you</div>
-    <h2>Where were our first meeting?</h2>
+    <h2>Where was our first meeting?</h2>
     <input type="text" id="lockInput" autocomplete="off" placeholder="Type your answer">
     <button onclick="tryUnlock()">Unlock</button>
     <div class="error" id="lockError">That's not it — try again</div>
@@ -277,18 +274,65 @@
   </div>
 </div>
 
-<!-- CONTAINER FOR DECRYPTED CONTENT -->
-<div id="site"></div>
+<!-- MAIN SITE CONTENT -->
+<div id="site">
+  <button class="music-btn" id="musicToggle" onclick="toggleMusic()">🎵 Pause Music</button>
+  <div id="stars"></div>
+
+  <section class="hero">
+    <div class="eyebrow">September 10</div>
+    <h1>Happy Birthday,<br>Aseel</h1>
+    <p class="sub">Counting every second until the world gets to celebrate you again.</p>
+    <div class="countdown" id="countdown">
+      <div class="cbox"><div class="num" id="d">00</div><div class="lbl">Days</div></div>
+      <div class="cbox"><div class="num" id="h">00</div><div class="lbl">Hours</div></div>
+      <div class="cbox"><div class="num" id="m">00</div><div class="lbl">Mins</div></div>
+      <div class="cbox"><div class="num" id="s">00</div><div class="lbl">Secs</div></div>
+    </div>
+    <div class="candle"><div class="flame"></div><div class="wick"></div><div class="caption">make a wish</div></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">A note for you</div>
+    <div class="note">
+      <p>Happy birthday, Aseel. I still think about that night I first saw you — I didn't even know your name yet, but something in me already knew I wanted to. Then came the day I finally talked to you, terrified and telling myself "whatever happens, happens" — and it turned out to be the best risk I've ever taken. Since then, every date, every late-night talk, every small moment has only made me fall harder. The day you said yes and we became official, I felt like the luckiest person alive, and I still do. You have no idea how much you mean to me — how you make ordinary days feel worth remembering, and how safe and loved I feel just being next to you. I hope this year gives you every bit of happiness you give me, and more. Happy birthday, my love. Here's to us, and to everything still ahead.</p>
+      <div class="sign">— Ahmed</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Our favorite moments</div>
+    <h2 style="font-size: clamp(1.6rem,4vw,2.2rem);">A little gallery</h2>
+    <div class="gallery-grid">
+      <div class="photo-slot"><img src="photos/IMG_9819.jpg" alt=""></div>
+      <div class="photo-slot"><img src="photos/IMG_5847.jpg" alt=""></div>
+      <div class="photo-slot"><img src="photos/IMG_9818.jpg" alt=""></div>
+      <div class="photo-slot"><img src="photos/IMG_7050.jpg" alt=""></div>
+      <div class="photo-slot"><img src="photos/IMG_9817.jpg" alt=""></div>
+      <div class="photo-slot"><img src="photos/IMG_8186.jpg" alt=""></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Key memories</div>
+    <h2 style="font-size: clamp(1.6rem,4vw,2.2rem); margin-bottom: 8px;">Our story so far</h2>
+    <div class="constellation">
+      <div class="memory"><div class="date">November 18, 2025</div><h3>The day I first saw her</h3><p>I saw her beautiful eyes, and that was the moment I decided to keep her in my mind.</p></div>
+      <div class="memory"><div class="date">November 25, 2025</div><h3>The first time we talked</h3><p>I took the chance. I was a little afraid, but I told myself — whatever happens, happens.</p></div>
+      <div class="memory"><div class="date">January 3, 2026</div><h3>Our first date</h3><p>A day full of love, exploring each other — the beginning of falling.</p></div>
+      <div class="memory"><div class="date">April 30, 2026</div><h3>She said yes</h3><p>We couldn't hold our feelings in any longer, and everything finally came out. We officially became together.</p></div>
+    </div>
+  </section>
+
+  <footer>made with love, for aseel</footer>
+</div>
 
 <script>
-  // Encrypted content generated securely
-  const ENCRYPTED_DATA = "U2FsdGVkX19s+Nqj230+Y1R5O9Jm1v0H1h4R21aW2c0P6+n9f8Z7Y6X5W4V3U2T1S0R9P8O7N6M5L4K3J2I1H0G9F8E7D6C5B4A3z2y1x0w9v8u7t6s5r4q3p2o1n0m9l8k7j6i5h4g3f2e1d0c9b8a7";
-  
-  // Developer Pass Hash (SHA-256 for DEV123)
+  // SHA-256 hash for "DEV123"
   const DEV_HASH = "809a25b1e60447164ff2f9547cb02c2f6236b28935c1f01659a721ee8dcc0875";
   
-  // Real Key Hash (SHA-256 for "وادى النيل")
-  const REAL_KEY = "وادى النيل";
+  // Normalized SHA-256 hash for "وادي النيل"
+  const ANSWER_HASH = "55c4784e20790bc20bf4bf22a2bb7f5a0be5e6381615d03a1d95e0e090903cb7";
 
   const target = new Date(2026, 8, 10, 0, 0, 0).getTime();
 
@@ -303,7 +347,6 @@
       .replace(/\s+/g, ' ');
   }
 
-  // Helper for SHA-256
   async function sha256(str) {
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -315,22 +358,23 @@
     const errorEl = document.getElementById('lockError');
     const now = Date.now();
 
-    // 1. Check Developer Bypass
     const inputHash = await sha256(rawVal);
+    const normInputHash = await sha256(normalize(rawVal));
+
+    // 1. Check Developer Password (DEV123) -> Bypasses lock immediately
     if (inputHash === DEV_HASH) {
-      decryptAndShow(REAL_KEY);
+      unlockSite();
       return;
     }
 
-    // 2. Check Standard Unlock
-    const normVal = normalize(rawVal);
-    if (normVal === normalize(REAL_KEY)) {
+    // 2. Check Real Answer ("وادي النيل")
+    if (normInputHash === ANSWER_HASH) {
       if (now < target) {
         errorEl.textContent = "Correct answer, but wait until the time comes! ⏳";
         errorEl.classList.add('show');
         triggerShake();
       } else {
-        decryptAndShow(REAL_KEY);
+        unlockSite();
       }
     } else {
       errorEl.textContent = "That's not it — try again";
@@ -339,62 +383,13 @@
     }
   }
 
-  function decryptAndShow(key){
-    // Actual HTML data stored in encrypted format
-    const rawHTML = `
-      <button class="music-btn" id="musicToggle" onclick="toggleMusic()">🎵 Pause Music</button>
-      <div id="stars"></div>
-      <section class="hero">
-        <div class="eyebrow">September 10</div>
-        <h1>Happy Birthday,<br>Aseel</h1>
-        <p class="sub">Counting every second until the world gets to celebrate you again.</p>
-        <div class="countdown" id="countdown">
-          <div class="cbox"><div class="num" id="d">00</div><div class="lbl">Days</div></div>
-          <div class="cbox"><div class="num" id="h">00</div><div class="lbl">Hours</div></div>
-          <div class="cbox"><div class="num" id="m">00</div><div class="lbl">Mins</div></div>
-          <div class="cbox"><div class="num" id="s">00</div><div class="lbl">Secs</div></div>
-        </div>
-        <div class="candle"><div class="flame"></div><div class="wick"></div><div class="caption">make a wish</div></div>
-      </section>
-      <section>
-        <div class="eyebrow">A note for you</div>
-        <div class="note">
-          <p>Happy birthday, Aseel. I still think about that night I first saw you — I didn't even know your name yet, but something in me already knew I wanted to. Then came the day I finally talked to you, terrified and telling myself "whatever happens, happens" — and it turned out to be the best risk I've ever taken. Since then, every date, every late-night talk, every small moment has only made me fall harder. The day you said yes and we became official, I felt like the luckiest person alive, and I still do. You have no idea how much you mean to me — how you make ordinary days feel worth remembering, and how safe and loved I feel just being next to you. I hope this year gives you every bit of happiness you give me, and more. Happy birthday, my love. Here's to us, and to everything still ahead.</p>
-          <div class="sign">— Ahmed</div>
-        </div>
-      </section>
-      <section>
-        <div class="eyebrow">Our favorite moments</div>
-        <h2 style="font-size: clamp(1.6rem,4vw,2.2rem);">A little gallery</h2>
-        <div class="gallery-grid">
-          <div class="photo-slot"><img src="photos/IMG_9819.jpg" alt=""></div>
-          <div class="photo-slot"><img src="photos/IMG_5847.jpg" alt=""></div>
-          <div class="photo-slot"><img src="photos/IMG_9818.jpg" alt=""></div>
-          <div class="photo-slot"><img src="photos/IMG_7050.jpg" alt=""></div>
-          <div class="photo-slot"><img src="photos/IMG_9817.jpg" alt=""></div>
-          <div class="photo-slot"><img src="photos/IMG_8186.jpg" alt=""></div>
-        </div>
-      </section>
-      <section>
-        <div class="eyebrow">Key memories</div>
-        <h2 style="font-size: clamp(1.6rem,4vw,2.2rem); margin-bottom: 8px;">Our story so far</h2>
-        <div class="constellation">
-          <div class="memory"><div class="date">November 18, 2025</div><h3>The day I first saw her</h3><p>I saw her beautiful eyes, and that was the moment I decided to keep her in my mind.</p></div>
-          <div class="memory"><div class="date">November 25, 2025</div><h3>The first time we talked</h3><p>I took the chance. I was a little afraid, but I told myself — whatever happens, happens.</p></div>
-          <div class="memory"><div class="date">January 3, 2026</div><h3>Our first date</h3><p>A day full of love, exploring each other — the beginning of falling.</p></div>
-          <div class="memory"><div class="date">April 30, 2026</div><h3>She said yes</h3><p>We couldn't hold our feelings in any longer, and everything finally came out. We officially became together.</p></div>
-        </div>
-      </section>
-      <footer>made with love, for aseel</footer>
-    `;
-
-    document.getElementById('site').innerHTML = rawHTML;
+  function unlockSite(){
     document.getElementById('lock').classList.add('hidden');
     document.getElementById('site').classList.add('revealed');
     initStars();
 
     const audio = document.getElementById('bgMusic');
-    audio.play().catch(err => console.log("Audio deferred:", err));
+    if(audio) audio.play().catch(err => console.log("Audio deferred:", err));
   }
 
   function triggerShake(){
